@@ -5,7 +5,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  AZURE_SERVICE_CONNECTION_NAME: 'Devlabs'
+  AZURE_SERVICE_CONNECTION_NAME: ''
   AZURE_RESOURCE_GROUP: 'example-resources'
   AZURE_LOCATION: 'West Europe'
 
