@@ -1,0 +1,42 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  AZURE_SERVICE_CONNECTION_NAME: 'azure-connection-name'
+  AZURE_RESOURCE_GROUP: 'example-resources'
+  AZURE_LOCATION: 'West Europe'
+
+stages:
+- stage: TerraformApply
+  jobs:
+  - job: Terraform
+    steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.x'
+        addToPath: true
+
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: '$(AZURE_SERVICE_CONNECTION_NAME)'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          # Install Terraform
+          curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+          sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+          sudo apt-get update && sudo apt-get install terraform
+
+          # Initialize Terraform
+          terraform init
+
+          # Apply Terraform configuration
+          terraform apply -auto-approve
+        workingDirectory: $(System.DefaultWorkingDirectory)
+    - script: |
+        terraform init
+        terraform apply -auto-approve
+      displayName: 'Run Terraform'
