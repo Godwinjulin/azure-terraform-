@@ -42,7 +42,7 @@ resource "azurerm_virtual_machine" "example" {
   network_interface_ids = [
     azurerm_network_interface.example[count.index].id,
   ]
-  vm_size             = "Standard_DS1_v2"
+  vm_size = "Standard_DS1_v2"
 
   storage_os_disk {
     name              = "example_os_disk"
